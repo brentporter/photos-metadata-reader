@@ -41,7 +41,7 @@ public class Main {
                             for (Tag tag : directory.getTags()) {
                                 counter += 1;
                                 System.out.println(tag);
-                                //if(directory.getName().equalsIgnoreCase("File")) {
+                                // if(directory.getName().equalsIgnoreCase("File")) {
                                 //    System.out.println(tag.getDescription());
                                 //}
                             }
@@ -52,6 +52,7 @@ public class Main {
             }
             System.out.println(counterFiles);
             MetadataWriter metadataWriter = new MetadataWriter();
+            System.out.println(metadataWriter.WriteGeoJSON());
             System.out.println(metadataWriter.WriteGeoJSON());
         } catch (IOException e) {
             System.out.println(e.getMessage());

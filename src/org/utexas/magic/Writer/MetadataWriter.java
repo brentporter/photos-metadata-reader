@@ -71,7 +71,7 @@ public class MetadataWriter {
         jsonObject.put("features", list);
         jsonObject.put("type", "FeatureCollection");
 
-        try (FileWriter fileWriter = new FileWriter("/Users/crimsonking/Pictures/txcap/tester3.json")) {
+        try (FileWriter fileWriter = new FileWriter("/Users/crimsonking/Pictures/txcap/tester3.json",true)) {
 
             Jsoner.serialize(jsonObject, fileWriter);
 
