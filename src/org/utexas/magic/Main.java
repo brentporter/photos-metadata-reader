@@ -14,25 +14,26 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Set;
 
 public class Main {
 
     public static void main(String[] args){
+        String fileDirectoryStr = "/Users/crimsonking/Pictures/txcap/";
         BufferedImage img = null;
         ImageInputStream stream = null;
         Iterator<ImageReader> readers = ImageIO.getImageReadersByFormatName("JPG");
         ImageReader reader = readers.next();
         try {
-            File jpegFile = new File("/Users/crimsonking/Pictures/txcap/S0912A0737_B_5876.JPG");
+            DirectoryParser directoryParser = new DirectoryParser();
+            Set<String> listOFiles = directoryParser.listFilesUsingFilesList(fileDirectoryStr);
+            if(!listOFiles.isEmpty()){
+                for(String fName : listOFiles){
+                    System.out.println(fName);
+                }
+            }
+            File jpegFile = new File("/Users/crimsonking/Pictures/txcap/S0912A0737_B_5876XXXX.JPG");
             Metadata metadata = ImageMetadataReader.readMetadata(jpegFile);
-            /*stream = ImageIO.createImageInputStream(new File("/Users/crimsonking/Pictures/S0912A0737_B_5876.JPG"));
-
-            reader.setInput(stream, true);
-
-            IIOMetadata metadata = reader.getImageMetadata(0);
-            //img = ImageIO.read(new File("/Users/crimsonking/Pictures/S0912A0737_B_5876.JPG"));
-            //System.out.println(img.getColorModel().getPixelSize());
-            System.out.println(metadata.);*/
             int counter = 0;
             for (Directory directory : metadata.getDirectories()) {
                 for (Tag tag : directory.getTags()) {
