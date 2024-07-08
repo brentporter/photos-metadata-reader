@@ -6,6 +6,7 @@ import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.Tag;
 import org.utexas.magic.Parser.DirectoryParser;
+import org.utexas.magic.Writer.MetadataWriter;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -32,23 +33,26 @@ public class Main {
                 for(String fName : listOFiles){
                     counterFiles += 1;
                     System.out.println(fName);
-
-                    File jpegFile = new File(fileDirectoryStr+fName);
-                    Metadata metadata = ImageMetadataReader.readMetadata(jpegFile);
-                    int counter = 0;
-                    for (Directory directory : metadata.getDirectories()) {
-                        for (Tag tag : directory.getTags()) {
-                            counter += 1;
-                            System.out.println(tag);
-                            //if(directory.getName().equalsIgnoreCase("File")) {
-                            //    System.out.println(tag.getDescription());
-                            //}
+                    if(fName.endsWith("JPG")||fName.endsWith("jpg")) {
+                        File jpegFile = new File(fileDirectoryStr + fName);
+                        Metadata metadata = ImageMetadataReader.readMetadata(jpegFile);
+                        int counter = 0;
+                        for (Directory directory : metadata.getDirectories()) {
+                            for (Tag tag : directory.getTags()) {
+                                counter += 1;
+                                System.out.println(tag);
+                                //if(directory.getName().equalsIgnoreCase("File")) {
+                                //    System.out.println(tag.getDescription());
+                                //}
+                            }
                         }
+                        System.out.println(counter);
                     }
-                    System.out.println(counter);
                 }
             }
             System.out.println(counterFiles);
+            MetadataWriter metadataWriter = new MetadataWriter();
+            System.out.println(metadataWriter.WriteGeoJSON());
         } catch (IOException e) {
             System.out.println(e.getMessage());
         } catch (ImageProcessingException e) {

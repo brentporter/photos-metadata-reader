@@ -30,12 +30,11 @@ public class MetadataWriter {
     public boolean WriteGeoJSON(){
         //Feature Class at beginning of GeoJSON
         JsonObject jsonObject = new JsonObject();
-        jsonObject.put("type", "FeatureCollection");
 
         JsonObject jsonIOProps = new JsonObject();
         jsonIOProps.put("Name","S0912A0476_A_0007.JPG");
-        jsonIOProps.put("SourceImage","http://web.corral.tacc.utexas.edu/CSR/Public/17harvey/TxCAP/20170912/S0912A0476_A/S0912A0476_A_0007.JPG");
-        jsonIOProps.put("Thumbnail","http://web.corral.tacc.utexas.edu/CSR/Public/17harvey/TxCAP/20170912/S0912A0476_A/S0912A0476_A_0007.JPG");
+        jsonIOProps.put("SourceImage","https://web.corral.tacc.utexas.edu/CSR/Public/17harvey/TxCAP/20170912/S0912A0476_A/S0912A0476_A_0007.JPG");
+        jsonIOProps.put("Thumbnail","https://web.corral.tacc.utexas.edu/CSR/Public/17harvey/TxCAP/20170912/S0912A0476_A/S0912A0476_A_0007.JPG");
         jsonIOProps.put("Collect_Date","2017-09-12");
         jsonIOProps.put("Collect_Time","13:45:27");
         jsonIOProps.put("GPS_Altitude","173 meters above sea level");
@@ -47,11 +46,19 @@ public class MetadataWriter {
         jsonIOProps.put("ResolutionDPI","300");
         jsonIOProps.put("ExposureTime","1/1000");
         jsonIOProps.put("Flag","None");
+        //"geometry":{"type":"Point","coordinates":[-97.85845166666667,29.886483333333334]}
+        JsonArray listCoords = new JsonArray();
+        listCoords.add(-97.85845166666667);
+        listCoords.add(29.886483333333334);
+        JsonObject jsonIOGeom = new JsonObject();
+        jsonIOGeom.put("type","Point");
+        jsonIOGeom.put("coordinates",listCoords);
 
         //Individual Features (Objects)
         JsonObject jsonFeature1 = new JsonObject();
-        jsonFeature1.put("type","Feature");
+        jsonFeature1.put("geometry",jsonIOGeom);
         jsonFeature1.put("properties",jsonIOProps);
+        jsonFeature1.put("type","Feature");
 
         // JsonArray listProp = new JsonArray();
 
@@ -63,8 +70,9 @@ public class MetadataWriter {
         // list.add("msg C");
 
         jsonObject.put("features", list);
+        jsonObject.put("type", "FeatureCollection");
 
-        try (FileWriter fileWriter = new FileWriter("/Users/crimsonking/Pictures/txcap/tester.json")) {
+        try (FileWriter fileWriter = new FileWriter("/Users/crimsonking/Pictures/txcap/tester3.json")) {
 
             Jsoner.serialize(jsonObject, fileWriter);
 
