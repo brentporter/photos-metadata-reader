@@ -1,4 +1,4 @@
-package org.utexas.magic;
+package org.utexas.magic.Parser;
 
 import java.io.IOException;
 import java.nio.file.Files;
