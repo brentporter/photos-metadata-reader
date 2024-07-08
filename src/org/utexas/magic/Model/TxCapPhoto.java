@@ -236,7 +236,7 @@ public class TxCapPhoto implements Jsonable {
         /*json.put("name", this.name);
         json.put("age", this.age);
         json.put("messages", new JsonArray(this.messages));*/
-        jsonFeature1.toJson(writer);
+        jsonObject.toJson(writer);
     }
 
 

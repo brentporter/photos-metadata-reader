@@ -5,6 +5,8 @@ import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.Tag;
+import com.github.cliftonlabs.json_simple.Jsoner;
+import org.utexas.magic.Model.TxCapPhoto;
 import org.utexas.magic.Parser.DirectoryParser;
 import org.utexas.magic.Writer.MetadataWriter;
 
@@ -13,8 +15,11 @@ import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 public class Main {
@@ -51,13 +56,47 @@ public class Main {
                 }
             }
             System.out.println(counterFiles);
+            TxCapPhoto txCapPhoto = new TxCapPhoto();
+            PopWriteTxCap();
+            /*
             MetadataWriter metadataWriter = new MetadataWriter();
             System.out.println(metadataWriter.WriteGeoJSON());
             System.out.println(metadataWriter.WriteGeoJSON());
+            */
         } catch (IOException e) {
             System.out.println(e.getMessage());
         } catch (ImageProcessingException e) {
             System.out.println("Errored Out");
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void PopWriteTxCap(){
+        TxCapPhoto txCapPhoto = new TxCapPhoto();
+        txCapPhoto.setName("S0912A0476_A_0007.JPG");
+        txCapPhoto.setSourceImage("https://web.corral.tacc.utexas.edu/CSR/Public/17harvey/TxCAP/20170912/S0912A0476_A/S0912A0476_A_0007.JPG");
+        txCapPhoto.setThumbnail("https://web.corral.tacc.utexas.edu/CSR/Public/17harvey/TxCAP/20170912/S0912A0476_A/S0912A0476_A_0007.JPG");
+        txCapPhoto.setCollect_Date("2017-09-12");
+        txCapPhoto.setCollect_Time("13:45:27");
+        txCapPhoto.setGPS_Altitude("173 meters above sea level");
+        txCapPhoto.setGPS_Latitude("N 29 deg 53'11.340000000000003");
+        txCapPhoto.setGPS_Longitude("W 97 deg 51'30.426000000000073");
+        txCapPhoto.setGPS_Map_Datum("WGS 84");
+        txCapPhoto.setNumSatellites("05 GPS Satellites");
+        txCapPhoto.setCamera_Model("NIKON D7100");
+        txCapPhoto.setResolutionDPI("300");
+        txCapPhoto.setExposure_Time("1/1000");
+        txCapPhoto.setFlag("None");
+        List<Float> coordinatesIn = new ArrayList<>();
+        coordinatesIn.add(29.886483333333334F);
+        coordinatesIn.add(-97.85845166666667F);
+        txCapPhoto.setCoordinates(coordinatesIn);
+        txCapPhoto.setFeatureType("Feature");
+        txCapPhoto.setPointType("Point");
+        try (FileWriter fileWriter = new FileWriter("/Users/crimsonking/Pictures/txcap/tester4001.json",true)) {
+            // convert object to json and write to file
+            Jsoner.serialize(txCapPhoto, fileWriter);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
