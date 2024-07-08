@@ -133,6 +133,52 @@ public class TxCapPhoto implements Jsonable {
     }
     public TxCapPhoto() {}
 
+    public TxCapPhoto(String Name, String SourceImage, String Thumbnail, String Collect_Date,
+                      String Collect_Time, String GPS_Altitude, String GPS_Latitude, String GPS_Longitude,
+                      String GPS_Map_Datum, String numSatellites, String Camera_Model, String ResolutionDPI,
+                      String Exposure_Time, String Flag, List<Float> coordinates, String FeatureType, String PointType){
+        this.Name = Name;
+        this.SourceImage = SourceImage;
+        this.Thumbnail = Thumbnail;
+        this.Collect_Date = Collect_Date;
+        this.Collect_Time = Collect_Time;
+        this.GPS_Altitude = GPS_Altitude;
+        this.GPS_Latitude = GPS_Latitude;
+        this.GPS_Longitude = GPS_Longitude;
+        this.GPS_Map_Datum = GPS_Map_Datum;
+        this.numSatellites = numSatellites;
+        this.Camera_Model = Camera_Model;
+        this.ResolutionDPI = ResolutionDPI;
+        this.Exposure_Time = Exposure_Time;
+        this.Flag = Flag;
+        this.coordinates = coordinates;
+        this.FeatureType = FeatureType;
+        this.PointType = PointType;
+
+    }
+
+    @Override
+    public String toString() {
+        return "Feature{" +
+                "Name='" + Name + '\'' +
+                ", SourceImage=" + SourceImage +
+                ", Thumbnail=" + Thumbnail +
+                ", Collect_Date=" + Collect_Date +
+                ", Collect_Time=" + Collect_Time +
+                ", GPS_Altitude=" + GPS_Altitude +
+                ", GPS_Latitude=" + GPS_Latitude +
+                ", GPS_Longitude=" + GPS_Longitude +
+                ", GPS_Map_Datum=" + GPS_Map_Datum +
+                ", numSatellites=" + numSatellites +
+                ", Camera_Model=" + Camera_Model +
+                ", ResolutionDPI=" + ResolutionDPI +
+                ", Exposure_Time=" + Exposure_Time +
+                ", Flag=" + Flag +
+                ", coordinates=" + coordinates +
+                ", FeatureType=" + FeatureType +
+                ", PointType=" + PointType +
+                '}';
+    }
 
     @Override
     public String toJson() {
@@ -147,11 +193,50 @@ public class TxCapPhoto implements Jsonable {
 
     @Override
     public void toJson(Writer writer) throws IOException {
-        JsonObject json = new JsonObject();
-        json.put("name", this.name);
+        JsonObject jsonObject = new JsonObject();
+
+        JsonObject jsonIOProps = new JsonObject();
+        jsonIOProps.put("Name",this.Name);
+        jsonIOProps.put("SourceImage",this.SourceImage);
+        jsonIOProps.put("Thumbnail",this.Thumbnail);
+        jsonIOProps.put("Collect_Date",this.Collect_Date);
+        jsonIOProps.put("Collect_Time",this.Collect_Time);
+        jsonIOProps.put("GPS_Altitude",this.GPS_Altitude);
+        jsonIOProps.put("GPS_Latitude",this.GPS_Latitude);
+        jsonIOProps.put("GPS_Longitude",this.GPS_Longitude);
+        jsonIOProps.put("GPS_Map_Datum",this.GPS_Map_Datum);
+        jsonIOProps.put("numSatellites",this.numSatellites);
+        jsonIOProps.put("Camera_Model",this.Camera_Model);
+        jsonIOProps.put("ResolutionDPI",this.ResolutionDPI);
+        jsonIOProps.put("ExposureTime",this.Exposure_Time);
+        jsonIOProps.put("Flag",this.Flag);
+
+        JsonObject jsonIOGeom = new JsonObject();
+        jsonIOGeom.put("type",this.PointType);
+        JsonArray listCoords = new JsonArray(this.coordinates);
+        jsonIOGeom.put("coordinates",listCoords);
+
+        //Individual Features (Objects)
+        JsonObject jsonFeature1 = new JsonObject();
+        jsonFeature1.put("geometry",jsonIOGeom);
+        jsonFeature1.put("properties",jsonIOProps);
+        jsonFeature1.put("type","Feature");
+
+        // JsonArray listProp = new JsonArray();
+
+        // JSON Array
+        JsonArray list = new JsonArray();
+        list.add(jsonFeature1);
+        // list.add("msg B");
+        // list.add("msg C");
+
+        jsonObject.put("features", list);
+        jsonObject.put("type", "FeatureCollection");
+        //JsonObject json = new JsonObject();
+        /*json.put("name", this.name);
         json.put("age", this.age);
-        json.put("messages", new JsonArray(this.messages));
-        json.toJson(writer);
+        json.put("messages", new JsonArray(this.messages));*/
+        jsonFeature1.toJson(writer);
     }
 
 
