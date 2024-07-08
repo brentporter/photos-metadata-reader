@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="TxCapIn:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/TxCapIn_jar</output-path>
+    <root id="archive" name="TxCapIn.jar">
+      <element id="module-output" name="TxCapIn" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/xmpcore-6.1.11.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/metadata-extractor-2.19.0.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
