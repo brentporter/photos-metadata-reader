@@ -8,6 +8,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.Set;
 
+/*************
+ * @author crimsonking
+ * Taken from notes/discription
+ * <a href="https://www.baeldung.com/java-list-directory-files">Java List Directory Files</a>
+ ************/
+
 public class DirectoryParser {
 
     public Set<String> listFilesUsingFilesList(String dir) {

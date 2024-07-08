@@ -27,24 +27,28 @@ public class Main {
         try {
             DirectoryParser directoryParser = new DirectoryParser();
             Set<String> listOFiles = directoryParser.listFilesUsingFilesList(fileDirectoryStr);
+            int counterFiles = 0;
             if(!listOFiles.isEmpty()){
                 for(String fName : listOFiles){
+                    counterFiles += 1;
                     System.out.println(fName);
+
+                    File jpegFile = new File(fileDirectoryStr+fName);
+                    Metadata metadata = ImageMetadataReader.readMetadata(jpegFile);
+                    int counter = 0;
+                    for (Directory directory : metadata.getDirectories()) {
+                        for (Tag tag : directory.getTags()) {
+                            counter += 1;
+                            System.out.println(tag);
+                            //if(directory.getName().equalsIgnoreCase("File")) {
+                            //    System.out.println(tag.getDescription());
+                            //}
+                        }
+                    }
+                    System.out.println(counter);
                 }
             }
-            File jpegFile = new File("/Users/crimsonking/Pictures/txcap/S0912A0737_B_5876XXXX.JPG");
-            Metadata metadata = ImageMetadataReader.readMetadata(jpegFile);
-            int counter = 0;
-            for (Directory directory : metadata.getDirectories()) {
-                for (Tag tag : directory.getTags()) {
-                    counter += 1;
-                    System.out.println(tag);
-                    //if(directory.getName().equalsIgnoreCase("File")) {
-                    //    System.out.println(tag.getDescription());
-                    //}
-                }
-            }
-            System.out.println(counter);
+            System.out.println(counterFiles);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         } catch (ImageProcessingException e) {
