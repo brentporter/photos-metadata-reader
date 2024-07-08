@@ -46,7 +46,7 @@ public class MetadataWriter {
         jsonIOProps.put("ResolutionDPI","300");
         jsonIOProps.put("ExposureTime","1/1000");
         jsonIOProps.put("Flag","None");
-        //"geometry":{"type":"Point","coordinates":[-97.85845166666667,29.886483333333334]}
+
         JsonArray listCoords = new JsonArray();
         listCoords.add(-97.85845166666667);
         listCoords.add(29.886483333333334);
@@ -61,7 +61,6 @@ public class MetadataWriter {
         jsonFeature1.put("type","Feature");
 
         // JsonArray listProp = new JsonArray();
-
 
         // JSON Array
         JsonArray list = new JsonArray();
