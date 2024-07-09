@@ -10,6 +10,7 @@ import java.io.IOException;
 /***********
  * @author crimsonking
  * JSON Simple https://mkyong.com/java/json-simple-example-read-and-write-json/#setup-jsonsimple
+ * JavaDocs https://cliftonlabs.github.io/json-simple/target/apidocs/index.html
  * Reference
  * {"name":"crimsonking","messages":["msg A","msg B","msg C"],"age":??}
  *         JsonObject jsonObject = new JsonObject();
