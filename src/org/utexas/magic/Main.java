@@ -52,12 +52,15 @@ public class Main {
                             }
                         }
                         System.out.println(counter);
+                        String fNameFile = fName.substring(0,fName.length()-4);
+                        System.out.print(fNameFile + ", "+ fileDirectoryStr);
+                        PopWriteTxCap2(fileDirectoryStr,fNameFile);
                     }
                 }
             }
             System.out.println(counterFiles);
-            TxCapPhoto txCapPhoto = new TxCapPhoto();
-            PopWriteTxCap();
+            //TxCapPhoto txCapPhoto = new TxCapPhoto();
+            //PopWriteTxCap();
             /*
             MetadataWriter metadataWriter = new MetadataWriter();
             System.out.println(metadataWriter.WriteGeoJSON());
@@ -93,11 +96,43 @@ public class Main {
         txCapPhoto.setCoordinates(coordinatesIn);
         txCapPhoto.setFeatureType("Feature");
         txCapPhoto.setPointType("Point");
-        try (FileWriter fileWriter = new FileWriter("/Users/crimsonking/Pictures/txcap/tester4001.json",true)) {
+        try (FileWriter fileWriter = new FileWriter("/Users/crimsonking/Pictures/txcap/tester4005.json",true)) {
             // convert object to json and write to file
             Jsoner.serialize(txCapPhoto, fileWriter);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public static void PopWriteTxCap2(String IncomingDirectory, String IncomingFile){
+        TxCapPhoto txCapPhoto = new TxCapPhoto();
+        txCapPhoto.setName(IncomingFile + ".JPG");
+        txCapPhoto.setSourceImage("https://web.corral.tacc.utexas.edu/CSR/Public/17harvey/TxCAP/20170912/S0912A0476_A/S0912A0476_A_0007.JPG");
+        txCapPhoto.setThumbnail("https://web.corral.tacc.utexas.edu/CSR/Public/17harvey/TxCAP/20170912/S0912A0476_A/S0912A0476_A_0007.JPG");
+        txCapPhoto.setCollect_Date("2017-09-12");
+        txCapPhoto.setCollect_Time("13:45:27");
+        txCapPhoto.setGPS_Altitude("173 meters above sea level");
+        txCapPhoto.setGPS_Latitude("N 29 deg 53'11.340000000000003");
+        txCapPhoto.setGPS_Longitude("W 97 deg 51'30.426000000000073");
+        txCapPhoto.setGPS_Map_Datum("WGS 84");
+        txCapPhoto.setNumSatellites("05 GPS Satellites");
+        txCapPhoto.setCamera_Model("NIKON D7100");
+        txCapPhoto.setResolutionDPI("300");
+        txCapPhoto.setExposure_Time("1/1000");
+        txCapPhoto.setFlag("None");
+        List<Float> coordinatesIn = new ArrayList<>();
+        coordinatesIn.add(29.886483333333334F);
+        coordinatesIn.add(-97.85845166666667F);
+        txCapPhoto.setCoordinates(coordinatesIn);
+        txCapPhoto.setFeatureType("Feature");
+        txCapPhoto.setPointType("Point");
+
+        try (FileWriter fileWriter = new FileWriter(IncomingDirectory+IncomingFile+".json",true)) {
+            // convert object to json and write to file
+            Jsoner.serialize(txCapPhoto, fileWriter);
+        } catch (IOException e) {
+            //throw new RuntimeException(e);
+            System.out.println(e);
         }
     }
 }
