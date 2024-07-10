@@ -25,13 +25,13 @@ import java.util.List;
 import java.util.Set;
 
 public class Main {
-
+    static String basereaddir;
+    static String baseurl;
+    static String date;
+    static String basesortie;
+    static String thumbnails;
     public static void main(String[] args){
-        String basereaddir;
-        String baseurl;
-        String date;
-        String basesortie;
-        String thumbnails;
+
 
         ReadInProperties rip = new ReadInProperties();
         String[] propAry = rip.getProperties();
@@ -48,22 +48,27 @@ public class Main {
             Iterator<ImageReader> readers = ImageIO.getImageReadersByFormatName("JPG");
             ImageReader reader = readers.next();
             ArrayList<TxCapPhoto> aryPhotosIn = new ArrayList<>();
+
             try {
                 DirectoryParser directoryParser = new DirectoryParser();
-                Set<String> listOFiles = directoryParser.listFilesUsingFilesList(fileDirectoryStr);
+                Set<String> listOFiles = directoryParser.listFilesUsingFilesList(basereaddir);
                 int counterFiles = 0;
                 if (!listOFiles.isEmpty()) {
                     for (String fName : listOFiles) {
                         counterFiles += 1;
                         System.out.println(fName);
                         if (fName.endsWith("JPG") || fName.endsWith("jpg")) {
-                            File jpegFile = new File(fileDirectoryStr + fName);
+                            ArrayList<String> aryFields = new ArrayList<>();
+                            File jpegFile = new File(basereaddir + fName);
                             Metadata metadata = ImageMetadataReader.readMetadata(jpegFile);
                             int counter = 0;
                             for (Directory directory : metadata.getDirectories()) {
                                 for (Tag tag : directory.getTags()) {
                                     counter += 1;
                                     System.out.println(tag);
+                                    if(directory.getName().equalsIgnoreCase("GPS")){
+                                        aryFields.add(directory.getName());
+                                    }
                                     // if(directory.getName().equalsIgnoreCase("File")) {
                                     //    System.out.println(tag.getDescription());
                                     //}
@@ -71,8 +76,9 @@ public class Main {
                             }
                             System.out.println(counter);
                             String fNameFile = fName.substring(0, fName.length() - 4);
-                            System.out.print(fNameFile + ", " + fileDirectoryStr);
-                            aryPhotosIn.add(PopWriteTxCap2(fileDirectoryStr, fNameFile));
+                            System.out.print(fNameFile + ", " + basereaddir);
+                            String combinedSourceURL = baseurl +"TxCAP/"+ date +basesortie;
+                            aryPhotosIn.add(PopWriteTxCap2(combinedSourceURL, fNameFile, aryFields));
                         }
                     }
                 }
@@ -129,11 +135,11 @@ public class Main {
         }
     }
 
-    public static TxCapPhoto PopWriteTxCap2(String IncomingDirectory, String IncomingFile){
+    public static TxCapPhoto PopWriteTxCap2(String IncomingDirectory, String IncomingFile, ArrayList<String> aryFieldsIn){
         TxCapPhoto txCapPhoto = new TxCapPhoto();
         txCapPhoto.setName(IncomingFile + ".JPG");
-        txCapPhoto.setSourceImage("https://web.corral.tacc.utexas.edu/CSR/Public/17harvey/TxCAP/20170912/S0912A0476_A/S0912A0476_A_0007.JPG");
-        txCapPhoto.setThumbnail("https://web.corral.tacc.utexas.edu/CSR/Public/17harvey/TxCAP/20170912/S0912A0476_A/S0912A0476_A_0007.JPG");
+        txCapPhoto.setSourceImage(IncomingDirectory+IncomingFile+".JPG");
+        txCapPhoto.setThumbnail(IncomingDirectory+"thumbnails/"+IncomingFile+"_tn.JPG");
         txCapPhoto.setCollect_Date("2017-09-12");
         txCapPhoto.setCollect_Time("13:45:27");
         txCapPhoto.setGPS_Altitude("173 meters above sea level");
@@ -175,8 +181,9 @@ public class Main {
 
     }
     public static void WritePhotosWrapper(ArrayList<TxCapPhoto> aryPhotos){
+        String finalSortieName = baseurl +"TxCAP/"+ date +basesortie;
         WrapPhotos wrapPhotos = new WrapPhotos();
-        boolean results = wrapPhotos.FinishPhotos(aryPhotos);
+        boolean results = wrapPhotos.FinishPhotos(finalSortieName,aryPhotos);
         if(results){
             System.out.println("Worked");
         } else {

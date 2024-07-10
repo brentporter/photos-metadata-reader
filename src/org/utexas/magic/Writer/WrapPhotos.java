@@ -11,13 +11,13 @@ import java.util.ArrayList;
 
 public class WrapPhotos {
 
-    public boolean FinishPhotos(ArrayList<TxCapPhoto> txCapPhotos){
+    public boolean FinishPhotos(String finalName, ArrayList<TxCapPhoto> txCapPhotos){
         JsonObject jsonObject = new JsonObject();
         JsonArray list = new JsonArray();
         list.addAll(txCapPhotos);
         jsonObject.put("features", list);
         jsonObject.put("type", "FeatureCollection");
-        try (FileWriter fileWriter = new FileWriter("/Users/crimsonking/Pictures/txcap/WholeEnchilada3000.json", true)) {
+        try (FileWriter fileWriter = new FileWriter(finalName+".json", true)) {
             // convert object to json and write to file
             Jsoner.serialize(jsonObject, fileWriter);
             return true;
