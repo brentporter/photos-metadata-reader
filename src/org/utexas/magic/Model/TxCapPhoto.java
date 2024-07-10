@@ -230,6 +230,11 @@ public class TxCapPhoto implements Jsonable {
         // list.add("msg B");
         // list.add("msg C");
 
+         /*
+          * these 2 are ignored for now bc we are using this in a loop
+          * as well as not using jsonObject.toJson at the end in lieu
+          * of jsonFeature1 - deferred to WrapPhotos.java
+         */
         jsonObject.put("features", list);
         jsonObject.put("type", "FeatureCollection");
         //JsonObject json = new JsonObject();

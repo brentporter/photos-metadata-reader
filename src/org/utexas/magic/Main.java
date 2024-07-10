@@ -30,6 +30,7 @@ public class Main {
         ImageInputStream stream = null;
         Iterator<ImageReader> readers = ImageIO.getImageReadersByFormatName("JPG");
         ImageReader reader = readers.next();
+        ArrayList<TxCapPhoto> aryPhotosIn = new ArrayList<>();
         try {
             DirectoryParser directoryParser = new DirectoryParser();
             Set<String> listOFiles = directoryParser.listFilesUsingFilesList(fileDirectoryStr);
@@ -54,7 +55,7 @@ public class Main {
                         System.out.println(counter);
                         String fNameFile = fName.substring(0,fName.length()-4);
                         System.out.print(fNameFile + ", "+ fileDirectoryStr);
-                        PopWriteTxCap2(fileDirectoryStr,fNameFile);
+                        aryPhotosIn.add(PopWriteTxCap2(fileDirectoryStr,fNameFile));
                     }
                 }
             }
@@ -66,6 +67,7 @@ public class Main {
             System.out.println(metadataWriter.WriteGeoJSON());
             System.out.println(metadataWriter.WriteGeoJSON());
             */
+            RollupPhotos(aryPhotosIn);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         } catch (ImageProcessingException e) {
@@ -104,7 +106,7 @@ public class Main {
         }
     }
 
-    public static void PopWriteTxCap2(String IncomingDirectory, String IncomingFile){
+    public static TxCapPhoto PopWriteTxCap2(String IncomingDirectory, String IncomingFile){
         TxCapPhoto txCapPhoto = new TxCapPhoto();
         txCapPhoto.setName(IncomingFile + ".JPG");
         txCapPhoto.setSourceImage("https://web.corral.tacc.utexas.edu/CSR/Public/17harvey/TxCAP/20170912/S0912A0476_A/S0912A0476_A_0007.JPG");
@@ -127,12 +129,26 @@ public class Main {
         txCapPhoto.setFeatureType("Feature");
         txCapPhoto.setPointType("Point");
 
-        try (FileWriter fileWriter = new FileWriter(IncomingDirectory+IncomingFile+".json",true)) {
+        /*try (FileWriter fileWriter = new FileWriter(IncomingDirectory+IncomingFile+".json",true)) {
             // convert object to json and write to file
             Jsoner.serialize(txCapPhoto, fileWriter);
         } catch (IOException e) {
             //throw new RuntimeException(e);
             System.out.println(e);
+        }*/
+        return txCapPhoto;
+    }
+
+    public static void RollupPhotos(ArrayList<TxCapPhoto> aryPhotos){
+        for(TxCapPhoto tcp:aryPhotos) {
+            try (FileWriter fileWriter = new FileWriter("/Users/crimsonking/Pictures/txcap/Tester3000.json", true)) {
+                // convert object to json and write to file
+                Jsoner.serialize(tcp, fileWriter);
+            } catch (IOException e) {
+                //throw new RuntimeException(e);
+                System.out.println(e);
+            }
         }
+
     }
 }
