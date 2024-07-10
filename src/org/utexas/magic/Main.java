@@ -9,6 +9,7 @@ import com.github.cliftonlabs.json_simple.Jsoner;
 import org.utexas.magic.Model.TxCapPhoto;
 import org.utexas.magic.Parser.DirectoryParser;
 import org.utexas.magic.Writer.MetadataWriter;
+import org.utexas.magic.Writer.WrapPhotos;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -67,7 +68,8 @@ public class Main {
             System.out.println(metadataWriter.WriteGeoJSON());
             System.out.println(metadataWriter.WriteGeoJSON());
             */
-            RollupPhotos(aryPhotosIn);
+            //RollupPhotos(aryPhotosIn);
+            WritePhotosWrapper(aryPhotosIn);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         } catch (ImageProcessingException e) {
@@ -150,5 +152,14 @@ public class Main {
             }
         }
 
+    }
+    public static void WritePhotosWrapper(ArrayList<TxCapPhoto> aryPhotos){
+        WrapPhotos wrapPhotos = new WrapPhotos();
+        boolean results = wrapPhotos.FinishPhotos(aryPhotos);
+        if(results){
+            System.out.println("Worked");
+        } else {
+            System.out.println("Failed");
+        }
     }
 }
