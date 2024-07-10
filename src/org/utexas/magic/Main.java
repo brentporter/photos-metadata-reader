@@ -66,8 +66,81 @@ public class Main {
                                 for (Tag tag : directory.getTags()) {
                                     counter += 1;
                                     System.out.println(tag);
+                                    if(directory.getName().equalsIgnoreCase("Exif IFD0")){
+                                        String scratchExif = tag.toString().substring(12);
+                                        if(scratchExif.contains("Model -")){
+                                            //System.out.println(scratchExif);
+                                            scratchExif = scratchExif.substring(8);
+                                            System.out.println(scratchExif);
+                                            aryFields.add(scratchExif);
+                                        }
+                                        //X Resolution -
+                                        if(scratchExif.contains("X Resolution -")){
+                                            //System.out.println(scratchExif);
+                                            scratchExif = scratchExif.substring(15,17);
+                                            System.out.println(scratchExif);
+                                            aryFields.add(scratchExif);
+                                        }
+                                    }
+                                    //[Exif SubIFD]
+                                    if(directory.getName().equalsIgnoreCase("Exif SubIFD")){
+                                        String scratchExif = tag.toString().substring(13);
+                                        if(scratchExif.contains("Exposure Time -")){
+                                            System.out.println(scratchExif);
+                                            scratchExif = scratchExif.substring(17);
+                                            System.out.println(scratchExif);
+                                            aryFields.add(scratchExif);
+                                        }
+                                    }
                                     if(directory.getName().equalsIgnoreCase("GPS")){
-                                        aryFields.add(directory.getName());
+                                        String scratch = tag.toString().substring(10);
+                                        if(scratch.contains("Latitude -")){
+                                            //System.out.println(scratch);
+                                            scratch = scratch.substring(11);
+                                            System.out.println(scratch);
+                                            aryFields.add(scratch);
+                                        }
+                                        if(scratch.contains("Longitude -")){
+                                            //System.out.println(scratch);
+                                            scratch = scratch.substring(12);
+                                            System.out.println(scratch);
+                                            aryFields.add(scratch);
+                                        }
+                                        if(scratch.contains("Altitude -")){
+                                            System.out.println(scratch);
+                                            scratch = scratch.substring(11);
+                                            System.out.println(scratch+" above sea level");
+                                            aryFields.add(scratch+" above sea level");
+                                        }
+                                        if(scratch.contains("Time-Stamp -")){
+                                            //System.out.println(scratch);
+                                            scratch = scratch.substring(13);
+                                            System.out.println(scratch);
+                                            aryFields.add(scratch);
+                                        }
+                                        if(scratch.contains("Satellites -")){
+                                            //System.out.println(scratch);
+                                            scratch = scratch.substring(12);
+                                            System.out.println(scratch);
+                                            aryFields.add(scratch);
+                                        }
+                                        if(scratch.contains("Map Datum -")){
+                                            //System.out.println(scratch);
+                                            scratch = scratch.substring(11);
+                                            System.out.println(scratch);
+                                            aryFields.add(scratch);
+                                        }
+                                        if(scratch.contains("Date Stamp -")){
+                                            //System.out.println(scratch);
+                                            scratch = scratch.substring(13);
+                                            System.out.println(scratch);
+                                            aryFields.add(scratch);
+                                        }
+                                        //ryFields.add(directory.getName());
+                                        //System.out.println(directory.getName());
+                                        //System.out.println(tag);
+                                        //System.out.println(tag.toString().substring(10));
+                                        //System.out.println(directory.getName().substring(10));
                                     }
                                     // if(directory.getName().equalsIgnoreCase("File")) {
                                     //    System.out.println(tag.getDescription());
@@ -76,7 +149,7 @@ public class Main {
                             }
                             System.out.println(counter);
                             String fNameFile = fName.substring(0, fName.length() - 4);
-                            System.out.print(fNameFile + ", " + basereaddir);
+                            System.out.println(fNameFile + ", " + basereaddir);
                             String combinedSourceURL = baseurl +"TxCAP/"+ date +basesortie;
                             aryPhotosIn.add(PopWriteTxCap2(combinedSourceURL, fNameFile, aryFields));
                         }
@@ -136,20 +209,29 @@ public class Main {
     }
 
     public static TxCapPhoto PopWriteTxCap2(String IncomingDirectory, String IncomingFile, ArrayList<String> aryFieldsIn){
+        System.out.println("Here");
+        System.out.println(aryFieldsIn.size());
+        /*
+        Order of the arraylist
+        Camera_Model,ResolutionDPI,ExposureTime
+        GPS_Latitude,GPS_Longitude,GPS_Altitude
+        Collect_Time, satellites, Datum, Collect_Date,
+
+         */
         TxCapPhoto txCapPhoto = new TxCapPhoto();
         txCapPhoto.setName(IncomingFile + ".JPG");
         txCapPhoto.setSourceImage(IncomingDirectory+IncomingFile+".JPG");
         txCapPhoto.setThumbnail(IncomingDirectory+"thumbnails/"+IncomingFile+"_tn.JPG");
-        txCapPhoto.setCollect_Date("2017-09-12");
-        txCapPhoto.setCollect_Time("13:45:27");
-        txCapPhoto.setGPS_Altitude("173 meters above sea level");
-        txCapPhoto.setGPS_Latitude("N 29 deg 53'11.340000000000003");
-        txCapPhoto.setGPS_Longitude("W 97 deg 51'30.426000000000073");
-        txCapPhoto.setGPS_Map_Datum("WGS 84");
-        txCapPhoto.setNumSatellites("05 GPS Satellites");
-        txCapPhoto.setCamera_Model("NIKON D7100");
-        txCapPhoto.setResolutionDPI("300");
-        txCapPhoto.setExposure_Time("1/1000");
+        txCapPhoto.setCollect_Date(aryFieldsIn.get(9));
+        txCapPhoto.setCollect_Time(aryFieldsIn.get(6));
+        txCapPhoto.setGPS_Altitude(aryFieldsIn.get(5));
+        txCapPhoto.setGPS_Latitude(aryFieldsIn.get(3));
+        txCapPhoto.setGPS_Longitude(aryFieldsIn.get(4));
+        txCapPhoto.setGPS_Map_Datum(aryFieldsIn.get(8));
+        txCapPhoto.setNumSatellites(aryFieldsIn.get(7));
+        txCapPhoto.setCamera_Model(aryFieldsIn.get(0));
+        txCapPhoto.setResolutionDPI(aryFieldsIn.get(1));
+        txCapPhoto.setExposure_Time(aryFieldsIn.get(2));
         txCapPhoto.setFlag("None");
         List<Float> coordinatesIn = new ArrayList<>();
         coordinatesIn.add(29.886483333333334F);

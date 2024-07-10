@@ -17,7 +17,7 @@ public class WrapPhotos {
         list.addAll(txCapPhotos);
         jsonObject.put("features", list);
         jsonObject.put("type", "FeatureCollection");
-        try (FileWriter fileWriter = new FileWriter(finalName+".json", true)) {
+        try (FileWriter fileWriter = new FileWriter("/Users/crimsonking/Pictures/txcap/Tester3000.json", true)) {
             // convert object to json and write to file
             Jsoner.serialize(jsonObject, fileWriter);
             return true;
