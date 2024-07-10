@@ -10,6 +10,7 @@ import org.utexas.magic.Model.TxCapPhoto;
 import org.utexas.magic.Parser.DirectoryParser;
 import org.utexas.magic.Writer.MetadataWriter;
 import org.utexas.magic.Writer.WrapPhotos;
+import org.utexas.magic.properties.ReadInProperties;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -26,55 +27,75 @@ import java.util.Set;
 public class Main {
 
     public static void main(String[] args){
-        String fileDirectoryStr = "/Users/crimsonking/Pictures/txcap/";
-        BufferedImage img = null;
-        ImageInputStream stream = null;
-        Iterator<ImageReader> readers = ImageIO.getImageReadersByFormatName("JPG");
-        ImageReader reader = readers.next();
-        ArrayList<TxCapPhoto> aryPhotosIn = new ArrayList<>();
-        try {
-            DirectoryParser directoryParser = new DirectoryParser();
-            Set<String> listOFiles = directoryParser.listFilesUsingFilesList(fileDirectoryStr);
-            int counterFiles = 0;
-            if(!listOFiles.isEmpty()){
-                for(String fName : listOFiles){
-                    counterFiles += 1;
-                    System.out.println(fName);
-                    if(fName.endsWith("JPG")||fName.endsWith("jpg")) {
-                        File jpegFile = new File(fileDirectoryStr + fName);
-                        Metadata metadata = ImageMetadataReader.readMetadata(jpegFile);
-                        int counter = 0;
-                        for (Directory directory : metadata.getDirectories()) {
-                            for (Tag tag : directory.getTags()) {
-                                counter += 1;
-                                System.out.println(tag);
-                                // if(directory.getName().equalsIgnoreCase("File")) {
-                                //    System.out.println(tag.getDescription());
-                                //}
+        String basereaddir;
+        String baseurl;
+        String date;
+        String basesortie;
+        String thumbnails;
+
+        ReadInProperties rip = new ReadInProperties();
+        String[] propAry = rip.getProperties();
+        if(propAry.length == 5) {
+            basereaddir = propAry[0];
+            baseurl = propAry[1];
+            date = propAry[2];
+            basesortie = propAry[3];
+            thumbnails = propAry[4];
+
+            String fileDirectoryStr = "/Users/crimsonking/Pictures/txcap/";
+            BufferedImage img = null;
+            ImageInputStream stream = null;
+            Iterator<ImageReader> readers = ImageIO.getImageReadersByFormatName("JPG");
+            ImageReader reader = readers.next();
+            ArrayList<TxCapPhoto> aryPhotosIn = new ArrayList<>();
+            try {
+                DirectoryParser directoryParser = new DirectoryParser();
+                Set<String> listOFiles = directoryParser.listFilesUsingFilesList(fileDirectoryStr);
+                int counterFiles = 0;
+                if (!listOFiles.isEmpty()) {
+                    for (String fName : listOFiles) {
+                        counterFiles += 1;
+                        System.out.println(fName);
+                        if (fName.endsWith("JPG") || fName.endsWith("jpg")) {
+                            File jpegFile = new File(fileDirectoryStr + fName);
+                            Metadata metadata = ImageMetadataReader.readMetadata(jpegFile);
+                            int counter = 0;
+                            for (Directory directory : metadata.getDirectories()) {
+                                for (Tag tag : directory.getTags()) {
+                                    counter += 1;
+                                    System.out.println(tag);
+                                    // if(directory.getName().equalsIgnoreCase("File")) {
+                                    //    System.out.println(tag.getDescription());
+                                    //}
+                                }
                             }
+                            System.out.println(counter);
+                            String fNameFile = fName.substring(0, fName.length() - 4);
+                            System.out.print(fNameFile + ", " + fileDirectoryStr);
+                            aryPhotosIn.add(PopWriteTxCap2(fileDirectoryStr, fNameFile));
                         }
-                        System.out.println(counter);
-                        String fNameFile = fName.substring(0,fName.length()-4);
-                        System.out.print(fNameFile + ", "+ fileDirectoryStr);
-                        aryPhotosIn.add(PopWriteTxCap2(fileDirectoryStr,fNameFile));
                     }
                 }
-            }
-            System.out.println(counterFiles);
-            //TxCapPhoto txCapPhoto = new TxCapPhoto();
-            //PopWriteTxCap();
+                System.out.println(counterFiles);
+                //TxCapPhoto txCapPhoto = new TxCapPhoto();
+                //PopWriteTxCap();
             /*
             MetadataWriter metadataWriter = new MetadataWriter();
             System.out.println(metadataWriter.WriteGeoJSON());
             System.out.println(metadataWriter.WriteGeoJSON());
             */
-            //RollupPhotos(aryPhotosIn);
-            WritePhotosWrapper(aryPhotosIn);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        } catch (ImageProcessingException e) {
-            System.out.println("Errored Out");
-            throw new RuntimeException(e);
+                //RollupPhotos(aryPhotosIn);
+                WritePhotosWrapper(aryPhotosIn);
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            } catch (ImageProcessingException e) {
+                System.out.println("Errored Out");
+                throw new RuntimeException(e);
+            }
+        } else {
+            System.out.println("You need to read how to set up the properties file correctly " +
+                    "before running this tool. Please see the readme.md or contact bporter@csr.utexas.edu " +
+                    "for support if problems persist.");
         }
     }
 
