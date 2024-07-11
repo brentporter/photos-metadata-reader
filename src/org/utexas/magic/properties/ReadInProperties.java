@@ -20,7 +20,8 @@ public class ReadInProperties {
             String date = (String) prop.get("DATE");
             String basesortie = (String) prop.get("BASESORTIE");
             String thumbnails = (String) prop.get("THUMBNAILS");
-            return new String[]{basereaddir, baseurl, date, basesortie, thumbnails};
+            String extension = (String) prop.get("IMAGEEXTENSION");
+            return new String[]{basereaddir, baseurl, date, basesortie, thumbnails, extension};
         } catch (IOException e) {
             System.out.println("Could not find the properties file");
             return new String[]{"Could not find the properties file"};

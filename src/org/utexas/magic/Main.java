@@ -30,23 +30,25 @@ public class Main {
     static String date;
     static String basesortie;
     static String thumbnails;
+    static String extension;
     public static void main(String[] args){
 
-
+        boolean writeFile = false;
         ReadInProperties rip = new ReadInProperties();
         String[] propAry = rip.getProperties();
-        if(propAry.length == 5) {
+        if(propAry.length == 6) {
             basereaddir = propAry[0];
             baseurl = propAry[1];
             date = propAry[2];
             basesortie = propAry[3];
             thumbnails = propAry[4];
+            extension = propAry[5];
 
             String fileDirectoryStr = "/Users/crimsonking/Pictures/txcap/";
             BufferedImage img = null;
             ImageInputStream stream = null;
-            Iterator<ImageReader> readers = ImageIO.getImageReadersByFormatName("JPG");
-            ImageReader reader = readers.next();
+            //Iterator<ImageReader> readers = ImageIO.getImageReadersByFormatName("JPG");
+            //ImageReader reader = readers.next();
             ArrayList<TxCapPhoto> aryPhotosIn = new ArrayList<>();
 
             try {
@@ -57,7 +59,7 @@ public class Main {
                     for (String fName : listOFiles) {
                         counterFiles += 1;
                         System.out.println(fName);
-                        if (fName.endsWith("JPG") || fName.endsWith("jpg")) {
+                        if (fName.endsWith(extension.toUpperCase()) || fName.endsWith(extension.toLowerCase())) {
                             ArrayList<String> aryFields = new ArrayList<>();
                             File jpegFile = new File(basereaddir + fName);
                             Metadata metadata = ImageMetadataReader.readMetadata(jpegFile);
@@ -151,7 +153,12 @@ public class Main {
                             String fNameFile = fName.substring(0, fName.length() - 4);
                             System.out.println(fNameFile + ", " + basereaddir);
                             String combinedSourceURL = baseurl +"TxCAP/"+ date +basesortie;
-                            aryPhotosIn.add(PopWriteTxCap2(combinedSourceURL, fNameFile, aryFields));
+                            if(aryFields.size()==10) {
+                                aryPhotosIn.add(PopWriteTxCap2(combinedSourceURL, fNameFile, aryFields));
+                                writeFile = true;
+                            } else {
+                                System.out.println("Unable to read appropriate metadata tags from image file");
+                            }
                         }
                     }
                 }
@@ -164,7 +171,13 @@ public class Main {
             System.out.println(metadataWriter.WriteGeoJSON());
             */
                 //RollupPhotos(aryPhotosIn);
-                WritePhotosWrapper(aryPhotosIn);
+                if(writeFile) {
+                    WritePhotosWrapper(aryPhotosIn);
+                } else {
+                    System.out.println("Could not write file please check log and messages " +
+                            "before running this tool again. Please see the readme.md or contact bporter@csr.utexas.edu " +
+                            "for support if problems persist.");
+                }
             } catch (IOException e) {
                 System.out.println(e.getMessage());
             } catch (ImageProcessingException e) {
