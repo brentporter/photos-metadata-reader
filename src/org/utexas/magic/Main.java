@@ -62,6 +62,7 @@ public class Main {
                         if (fName.endsWith(extension.toUpperCase()) || fName.endsWith(extension.toLowerCase())) {
                             ArrayList<String> aryFields = new ArrayList<>();
                             File jpegFile = new File(basereaddir + fName);
+                            System.out.println(basereaddir + fName);
                             Metadata metadata = ImageMetadataReader.readMetadata(jpegFile);
                             int counter = 0;
                             for (Directory directory : metadata.getDirectories()) {
@@ -165,6 +166,7 @@ public class Main {
                 System.out.println(counterFiles);
                 //TxCapPhoto txCapPhoto = new TxCapPhoto();
                 //PopWriteTxCap();
+                // reservation 40056714262
             /*
             MetadataWriter metadataWriter = new MetadataWriter();
             System.out.println(metadataWriter.WriteGeoJSON());
